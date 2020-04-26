@@ -112,8 +112,8 @@ colnames(activityLabels) <- c('activityId','activityType')
 #first tie the columns in the right order
 #and bind the rows
 mergedData <- rbind(
-                    cbind(y_train, subject_train, x_train), 
-                    cbind(y_test, subject_test, x_test))
+  cbind(y_train, subject_train, x_train), 
+  cbind(y_test, subject_test, x_test))
 
 # 2. Extracting only the measurements on the mean and standard deviation for each measurement
 # search the column name list for mean/std/dev and keep the ID's
@@ -143,7 +143,7 @@ outputData <- merge(outputData, activityLabels,
                     all.y=TRUE)   #force output if no join
 #and now reorder the columns
 outputData <- 
-        select( outputData, activityId, activityType, subjectId, everything())
+  select( outputData, activityId, activityType, subjectId, everything())
 
 # and write it to the  txt file without row numbers
 write.table(outputData, file = "tidy_data_summary.txt", row.names = FALSE, append = FALSE)
