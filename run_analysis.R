@@ -21,6 +21,9 @@
 # <- is this a description how the are cleansed and analysed
 #The work submitted for this project is the work of the student who submitted it. <- no problem
 
+# Start the clock!
+timer <- proc.time()
+
 # my way of path handling
 pathPrefix <- "UCI HAR Dataset"
 pathPrefixTest <- paste0( pathPrefix, "/test" )
@@ -127,16 +130,23 @@ filterVector <- (grepl("activityId" , colNames) |
 # Subsetting from setAllInOne:
 outputData <- mergedData[ , filterVector == TRUE]
 
-# 3. Uses descriptive activity names to name the activities in the data set
-outputData <- merge(outputData, activityLabels,
-                              by='activityId',
-                              all.x=TRUE)   #force output if no join
 
-# 5From the data set in step 4, creates a second, independent tidy data set with the average
+# From the data set in step 4, creates a second, independent tidy data set with the average
 #of each variable for each activity and each subject.
 
 outputData <- aggregate(. ~subjectId + activityId, outputData, mean)
 outputData <- outputData[order(outputData$subjectId, outputData$activityId),]
 
+# Add activity names tp the end of the dataset
+outputData <- merge(outputData, activityLabels,
+                    by='activityId',
+                    all.y=TRUE)   #force output if no join
+#and now reorder the columns
+outputData <- 
+        select( outputData, activityId, activityType, subjectId, everything())
+
 # and write it to the  txt file without row numbers
 write.table(outputData, file = "tidy_data_summary.txt", row.names = FALSE, append = FALSE)
+
+# Stop the clock and let us know how long it took
+print( proc.time() - timer )
